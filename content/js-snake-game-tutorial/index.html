@@ -7,17 +7,21 @@
             <!-- Viewport -->
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Snake Game</title>
-            <link href='https://fonts.googleapis.com/css?family=Luckiest+Guy' rel='stylesheet' type='text/css'>
             <link href='style.css' rel='stylesheet' type='text/css'>
         </head>
         <body>
+          <div id="main">
             <header>
-                <h1>Snake</h1>
+                <h1>SNAKE</h1>
             </header>
-            <canvas id="Canvas1" width="800" height="600">Your browser does not support HTML5 canvas.</canvas>
-            <img src="images/appleIcon.png" id="apple">
-            <img src="images/diglett.png" id="pika">
-            <img src="images/textbox2.png" id="textBox">
-            <script src="script.js"></script> 
+            <canvas id="Canvas1" width="600" height="400">Your browser does not support HTML5 canvas.</canvas>
+            <div id="directions">
+                <button id="pause"><img class="pause" src="images/pause.png" alt="Pause"></button>
+                <button id="play"><img class="play" src="images/play.png" alt="Play"></button>
+                <button id="restart"><img class="restart" src="images/restart.png" alt="Restart"></button>
+                <p>Use the <span>UP</span>, <span>DOWN</span>, <span>LEFT</span>, and <span>RIGHT</span> keys to move.</p>
+            </div>
+          </div>
+          <script src="script.js"></script> 
         </body>
 </html>
