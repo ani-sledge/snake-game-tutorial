@@ -4,28 +4,33 @@ var window;
 var document;
 var ctx;
 var play;
-var width = 800;
-var height = 600;
-var size = 50;
+var speed = 300;
+var width = 600;
+var height = 400;
+var size = 25;
 var snake = [[0, size, "RIGHT"]];
 var apple = [200, 200];
-// Icons
-var appleImg = document.getElementById("apple");
-var digImg = document.getElementById("pika");
-var textImg = document.getElementById("textBox");
 
 // Game Play Functions
 // added calls to the ctx drawImage functions
+
 var draw = function(snakeToDraw, apple) {
-    var drawableSnake = { type: "snake", pixels: snakeToDraw };
+    var drawableSnake = { type: "snake", pixels: snakeToDraw, color: 255};
     var drawableApple = { type: "apple", pixels: apple };
     var drawableObjects = [drawableSnake, drawableApple];
     drawableObjects.forEach(function(object) {
         if (object.type == "apple") {
-            ctx.drawImage(appleImg, object.pixels[1], object.pixels[0], size, size);
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(object.pixels[1]+size/2, object.pixels[0]+size/2, (size / 2), 0, 2*Math.PI);
+            ctx.fill();
         } else {
             object.pixels.forEach(function(pixel) {
-                ctx.drawImage(digImg, 0, 0, size, size, pixel[1], pixel[0], size, size); 
+                ctx.fillStyle = "rgb(" + object.color + ','+ object.color + ','+ object.color+")"; 
+                ctx.fillRect(pixel[1], pixel[0], size, size); 
+                if (object.color > 50) {
+                  object.color -= 8;
+                }
             });
         }
     });
@@ -80,14 +85,13 @@ var ate = function(snake, otherObject) {
 var displayMessage = function(message) {
     var text = "Whoops! You hit " + message + "!";
     ctx.font = "30px Arial";
-    ctx.drawImage(textImg, 0, 400, 800, 200);
-    ctx.fillStyle = "black";
-    ctx.fillText(text,60,500);
+    ctx.fillStyle = "white";
+    ctx.fillText(text,140,300);
 }
 // used Math.random to set a new apple in a random location on the canvas
 // quits the interval if a bad collision occurs
 
-var gameEngine = function() {
+var advanceGame = function() {
     var newSnake = moveSnake(snake);
     var outcome = true;
     if (ate(newSnake, [apple])) {
@@ -122,13 +126,32 @@ var changeDirection = function(e) {
         snake[0][2] = "RIGHT";
     }
 };
-// starts up the canvas; sets the interval; sets the event handler
+
+var restart = function() {
+    snake = [[0, size, "RIGHT"]];
+    apple = [200, 200];
+    clearInterval(play);
+    play = setInterval(advanceGame, speed);
+}
+
 window.onload = function () {
     var theCanvas = document.getElementById('Canvas1');
     if (theCanvas && theCanvas.getContext) {
         ctx = theCanvas.getContext("2d");
         if (ctx) {
-            play = setInterval(gameEngine, 400);
+            var pauseButton = document.getElementById('pause');
+            var playButton = document.getElementById('play');
+            var restartButton = document.getElementById('restart');
+            pauseButton.onclick = function() {
+                clearInterval(play);
+            }
+            playButton.onclick = function() {
+                play = setInterval(advanceGame, speed);
+            }
+            restartButton.onclick = function() {
+                restart();
+            }
+            play = setInterval(advanceGame, speed);
             document.onkeydown = changeDirection;
         }
     }
